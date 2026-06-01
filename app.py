@@ -7,7 +7,6 @@ from google import genai
 # ==========================================
 import os
 
-# 11, 12, 13번째 줄을 이 내용으로 정확히 바꿔주세요!
 NAVER_CLIENT_ID = st.secrets.get("k1MiMB29E5NGTCDkFe_y")
 NAVER_CLIENT_SECRET = st.secrets.get("qGiVsNyU07")
 GEMINI_API_KEY = st.secrets.get("AQ.Ab8RN6Jo5PuD3OksFgUQeF-cvJiKjyIrBizFUUwZvFY2IqlD4g")

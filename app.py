@@ -7,10 +7,9 @@ from google import genai
 # ==========================================
 import os
 
-NAVER_CLIENT_ID = st.secrets.get("k1MiMB29E5NGTCDkFe_y")
-NAVER_CLIENT_SECRET = st.secrets.get("qGiVsNyU07")
-GEMINI_API_KEY = st.secrets.get("AQ.Ab8RN6Jo5PuD3OksFgUQeF-cvJiKjyIrBizFUUwZvFY2IqlD4g")
-
+NAVER_CLIENT_ID = st.secrets.get("NAVER_CLIENT_ID")
+NAVER_CLIENT_SECRET = st.secrets.get("NAVER_CLIENT_SECRET")
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY")
 # Gemini 클라이언트 초기화
 if GEMINI_API_KEY and GEMINI_API_KEY != "YOUR_GEMINI_API_KEY":
     client = genai.Client(api_key=GEMINI_API_KEY)

@@ -83,8 +83,9 @@ def recommend_final_books(subject, level, direction, book_list):
 st.set_page_config(page_title="주제탐구 도서 추천기", page_icon="📚")
 st.title("📚 주제탐구 도서 추천 프로그램")
 
-if not client or NAVER_CLIENT_ID == "YOUR_NAVER_CLIENT_ID":
-    st.warning("⚠️ 코드 상단(8, 9, 10번째 줄)에 본인의 API 키들을 먼저 입력해주세요!")
+# API 키가 Secrets에서 잘 넘어왔는지 직관적으로 확인하는 조건문으로 변경
+if not client or NAVER_CLIENT_ID == "YOUR_NAVER_CLIENT_ID" or not NAVER_CLIENT_ID:
+    st.warning("⚠️ Streamlit Cloud의 Advanced settings -> Secrets 칸에 API 키를 정확히 입력했는지 확인해 주세요!")
     st.stop()
 
 with st.form("search_form"):

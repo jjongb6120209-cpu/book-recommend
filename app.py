@@ -116,11 +116,34 @@ if submitted:
                         seen_links.add(book['link'])
                         all_books.append(book)
         
-        if all_books:
+   if all_books:
             with st.spinner("제미나이가 맞춤형 추천사를 작성하는 중..."):
                 result = recommend_final_books(subject, level, direction, all_books)
                 st.success("🎉 추천이 완료되었습니다!")
                 st.markdown("---")
+                
+                # 📚 상단에 추천 도서 요약 (사진 + 정보) 배치
+                st.subheader("📚 AI 선정 추천 도서 리스트")
+                
+                # 도서들을 가로로 이쁘게 배치하기 위해 컬럼 생성 (최대 3권까지 표시)
+                display_books = all_books[:3]  
+                cols = st.columns(len(display_books))
+                
+                for idx, book in enumerate(display_books):
+                    with cols[idx]:
+                        # 책 표지 이미지가 있으면 띄우고, 없으면 빈 이미지 처리
+                        if book.get('image'):
+                            st.image(book['image'], use_container_width=True)
+                        else:
+                            st.write("📷 표지 없음")
+                        
+                        # 책 제목 (HTML 태그 제거하여 깔끔하게 표시)
+                        clean_title = book['title'].replace("<b>", "").replace("</b>", "")
+                        st.markdown(f"**{clean_title}**")
+                        st.caption(f"저자: {book['author']}")
+                
+                st.markdown("---")
+                st.subheader("💡 AI의 맞춤형 추천사 및 탐구 포인트")
                 st.markdown(result)
         else:
-            st.error("❌ 여전히 네이버에서 검색된 책이 없습니다. API 키(ID/Secret)가 정확한지 다시 확인해 보거나, '핵심 키워드'를 더 단순한 단어(예: 인공지능, 윤리)로 입력해 보세요.")
+            st.error("❌ 여전히 네이버에서 검색된 책이 없습니다. API 키를 다시 확인해 보세요.")

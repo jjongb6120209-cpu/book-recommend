@@ -10,12 +10,12 @@ NAVER_CLIENT_ID = st.secrets.get("NAVER_CLIENT_ID")
 NAVER_CLIENT_SECRET = st.secrets.get("NAVER_CLIENT_SECRET")
 ALADIN_TTB_KEY = st.secrets.get("ALADIN_TTB_KEY")
 
-# 💡 질문자님 요청대로 딱 2개의 키만 등록해서 사용합니다!
+# 💡 2개의 키를 리스트로 가져옵니다.
 API_KEYS = [
     st.secrets.get("GEMINI_API_KEY_1"),
     st.secrets.get("GEMINI_API_KEY_2")
 ]
-# 빈 값이나 기본 템플릿 글자는 걸러내기
+# 빈 값 필터링
 API_KEYS = [k for k in API_KEYS if k and k != "YOUR_GEMINI_API_KEY"]
 
 def get_gemini_client():
@@ -73,7 +73,7 @@ def generate_hybrid_recommendations(subject, keyword, level, direction, top_book
     """[호출 분산] 버튼 누를 때마다 무작위로 뽑힌 제미나이 열쇠로 딱 1번 질문 수행"""
     client = get_gemini_client()
     if not client:
-        return "AI 클라이언트를 초기화할 수 없습니다. API 키를 확인하세요."
+        return "추천평 생성 실패: AI 클라이언트를 초기화할 수 없습니다. API 키를 확인하세요."
 
     books_input_text = ""
     for idx, item in enumerate(top_books_with_toc):
@@ -165,7 +165,34 @@ if submitted:
             with st.spinner("분산된 AI 엔진 중 하나를 호출하여 리포트를 작성하는 중..."):
                 total_result = generate_hybrid_recommendations(subject, keyword, level, direction, top_books_with_toc)
             
-           if "추천평 생성 실패" in total_result:
+            if "추천평 생성 실패" in total_result:
                 st.error("⚠️ 선택된 AI 엔진이 잠시 포화 상태입니다. 한 번만 더 버튼을 눌러주시면 즉시 우회합니다!")
             else:
                 st.success("🎉 분산 엔진 분석 완료!")
+                st.markdown("---")
+                
+                results_split = total_result.split("===BOOK_SPLIT===")
+                
+                for idx, item in enumerate(top_books_with_toc):
+                    book = item['book']
+                    clean_title = book['title'].replace("<b>", "").replace("</b>", "")
+                    st.subheader(f"📖 추천 도서 {idx+1}. {clean_title}")
+                    
+                    col1, col2 = st.columns([1, 2.5])
+                    with col1:
+                        if book.get('image'):
+                            st.image(book['image'], use_container_width=True)
+                        else:
+                            st.write("📷 표지 이미지 없음")
+                        st.caption(f"✍️ 저자: {book.get('author', '미상')}")
+                        st.link_button("네이버 책에서 상세보기", book.get('link', 'https://book.naver.com'))
+                        
+                    with col2:
+                        if idx < len(results_split):
+                            st.markdown(results_split[idx].strip())
+                        else:
+                            st.markdown("AI 분석 로딩에 오류가 발생했습니다. 다시 시도해 주세요.")
+                    
+                    st.markdown("---")
+        else:
+            st.error("❌ 도서를 찾지 못했습니다. '핵심 키워드'를 조금 더 단순하거나 대중적인 단어로 입력해 보세요.")

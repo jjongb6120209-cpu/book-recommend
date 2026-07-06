@@ -165,5 +165,7 @@ if submitted:
             with st.spinner("분산된 AI 엔진 중 하나를 호출하여 리포트를 작성하는 중..."):
                 total_result = generate_hybrid_recommendations(subject, keyword, level, direction, top_books_with_toc)
             
-            if "추천평 생성 실패" in total_result:
-                st.error("⚠️ 선택된 AI 엔진이 잠시 포화 상태입니다. 한 번
+           if "추천평 생성 실패" in total_result:
+                st.error("⚠️ 선택된 AI 엔진이 잠시 포화 상태입니다. 한 번만 더 버튼을 눌러주시면 즉시 우회합니다!")
+            else:
+                st.success("🎉 분산 엔진 분석 완료!")
